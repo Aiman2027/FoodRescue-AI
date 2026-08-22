@@ -6,3 +6,4 @@ python-dotenv
 streamlit
 requests
 pandas
+google-genai
