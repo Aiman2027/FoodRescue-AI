@@ -32,7 +32,7 @@ FoodRescue AI looks at what you already have — from a photo, multiple photos, 
 | Layer | Technology |
 |---|---|
 | Frontend | [Streamlit](https://streamlit.io/) |
-| Backend | Flask / FastAPI (any server exposing the endpoints below) |
+| Backend | Flask  (any server exposing the endpoints below) |
 | AI Vision & Text | Google Gemini (Vision + text generation) |
 | Data handling | `pandas` for the editable ingredients table |
 | Styling | Custom CSS (dark theme, glassmorphism navbar, CSS keyframe animations) |
