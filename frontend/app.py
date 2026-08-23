@@ -2626,12 +2626,7 @@ if "detected_ingredients" in st.session_state:
                             ).format(err=str(e))
                         )
 
-<<<<<<< HEAD
                 if st.session_state.get(
-=======
-
-             if st.session_state.get(
->>>>>>> fb9a09b8b7ae11eb14d6db9239783b88abb90550
                 "recipe_image"
             ):
 
