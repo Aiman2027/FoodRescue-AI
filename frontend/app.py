@@ -2639,7 +2639,7 @@ if "detected_ingredients" in st.session_state:
                     with img_col_center:
 
                         st.markdown(
-                            f"""<div style="width:100%;max-width:480px;height:320px;margin:0 auto;border-radius:20px;overflow:hidden;border:1px solid rgba(34,211,238,0.25);box-shadow:0 12px 35px rgba(0,0,0,0.35);"><img src="data:image/png;base64,{st.session_state.recipe_image}" style="width:100%;height:100%;object-fit:cover;display:block;" /></div>""",
+                            f"""<div style="width:100%;max-width:480px;height:400px;margin:0 auto;border-radius:20px;overflow:hidden;border:1px solid rgba(34,211,238,0.25);box-shadow:0 12px 35px rgba(0,0,0,0.35);"><img src="data:image/png;base64,{st.session_state.recipe_image}" style="width:100%;height:100%;object-fit:cover;display:block;" /></div>""",
                             unsafe_allow_html=True
                         )
 
