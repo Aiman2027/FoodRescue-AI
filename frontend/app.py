@@ -2661,11 +2661,6 @@ if "detected_ingredients" in st.session_state:
                             )
                         )
 
-            
-
-           
-                            
-
             st.write(
                 get_text("steps_header", "### 📝 Steps:")
             )
