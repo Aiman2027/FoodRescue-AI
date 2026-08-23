@@ -17,7 +17,7 @@ FoodRescue AI looks at what you already have — from a photo, multiple photos, 
 
 - **✅ Full control before cooking** — review, edit, add, or remove any detected ingredient, and set quantities before generating a recipe
 
-- **🍽️ Personalized recipe generation** — pick your servings, get 2 recipe options to choose from, each with prep time, servings, and step-by-step instructions
+- **🍽️ Personalized recipe generation** — choose servings (1–10), get 2 recipe options to choose from, each with prep time, servings, and step-by-step instructions
 
 - **🎨 AI-generated dish photo** — see a preview of your finished meal before you start cooking
 
@@ -27,13 +27,38 @@ FoodRescue AI looks at what you already have — from a photo, multiple photos, 
 
 ---
 
+## 🧭 How to Use
+
+1. **Pick your language** — use the language dropdown at the top to choose whichever of the 11 supported languages you're most comfortable with. The entire UI (including AI-generated recipes) switches to that language.
+
+2. **Tell the app what's in your fridge** — in the "Get Started" card, choose one of three input methods:
+   - **📷 Take a photo** — turn on your camera and snap up to 5 pictures of your fridge/shelves
+   - **📁 Upload files** — upload up to 5 existing photos instead
+   - **🎤 Describe by voice** — just say out loud what you have (e.g. *"I have eggs, half a block of cheese, some spinach, and leftover rice"*) and the app transcribes it
+
+3. **Let AI detect the ingredients** — click **🔍 Analyze Ingredients**. Gemini Vision (or Gemini's audio understanding for voice notes) scans everything and builds a combined ingredient list.
+
+4. **Review and edit the ingredient table** — an editable table appears where you can:
+   - ✅ Toggle "Use?" to include or exclude an ingredient from the recipe
+   - ✏️ Add a quantity next to any ingredient (optional)
+   - ➕ Add ingredients the AI missed, or ❌ remove ones it got wrong
+
+5. **Choose your servings** — set how many people you're cooking for, from **1 to 10**.
+
+6. **Generate your recipe** — click **🍽️ Generate Recipes**. The app returns **2 different recipe options** built only from your selected ingredients (plus basic pantry staples like salt, oil, and spices).
+
+7. **Pick one and cook** — select whichever recipe you like better. You'll get the full prep time, servings, an AI-generated photo of the finished dish, and clear step-by-step instructions to follow — turning what would've been food waste into a real meal. 🥦
+
+---
+
 ## 🧱 Tech Stack
 
 | Layer | Technology |
 |---|---|
 | Frontend | [Streamlit](https://streamlit.io/) |
-| Backend | Flask  (any server exposing the endpoints below) |
-| AI Vision & Text | Google Gemini (Vision + text generation) |
+| Backend | Flask / FastAPI (any server exposing the endpoints below) |
+| AI Vision, Audio & Text | Google Gemini (Vision, audio transcription, and text generation) |
+| Recipe dish images | [Pollinations.ai](https://pollinations.ai/) (free text-to-image API) |
 | Data handling | `pandas` for the editable ingredients table |
 | Styling | Custom CSS (dark theme, glassmorphism navbar, CSS keyframe animations) |
 
@@ -53,7 +78,8 @@ foodrescue-ai/
 │       ├── bn.json
 │       └── ...
 └── backend/
-    └── (your Flask/FastAPI server exposing the endpoints below)
+    ├── main.py                 # Flask/FastAPI server (Gemini + Pollinations.ai calls)
+    └── requirements.txt
 ```
 
 ---
@@ -67,7 +93,7 @@ The frontend expects a backend running at `BACKEND_URL` (default `http://127.0.0
 | `/analyze-fridge` | `POST` (multipart, field `images`, plus `language`) | Returns `{"ingredients": [...]}` detected across all uploaded photos |
 | `/analyze-fridge-audio` | `POST` (multipart, field `audio`, plus `language`) | Transcribes the voice note and returns `{"ingredients": [...]}` |
 | `/generate-recipe` | `POST` (JSON: `ingredients`, `servings`, `language`) | Returns `{"recipes": [ {recipe_name, prep_time, servings, steps}, ... ]}` (2 options) |
-| `/generate-recipe-image` | `POST` (JSON: `recipe_name`) | Returns `{"image": "<base64-encoded PNG/JPEG>"}` |
+| `/generate-recipe-image` | `POST` (JSON: `recipe_name`) | Returns `{"image": "<base64-encoded PNG/JPEG>"}` generated via Pollinations.ai |
 
 > The frontend gracefully handles connection errors, timeouts, and malformed responses with user-facing error messages.
 
@@ -87,7 +113,19 @@ cd foodrescue-ai/frontend
 pip install streamlit pandas requests
 ```
 
-### 3. (Optional) Set your backend URL
+Backend dependencies (in `backend/requirements.txt`) include `fastapi`/`flask`, `uvicorn`, `google-genai`, `python-dotenv`, `requests`, and `python-multipart`.
+
+### 3. Set your Gemini API key (backend)
+
+Create a `.env` file inside `backend/`:
+
+```
+GEMINI_API_KEY=your_key_here
+```
+
+Get a free key from [Google AI Studio](https://aistudio.google.com/apikey).
+
+### 4. (Optional) Set your backend URL (frontend)
 
 By default the app looks for the backend at `http://127.0.0.1:8000`. To point elsewhere:
 
@@ -99,23 +137,25 @@ $env:BACKEND_URL="http://127.0.0.1:5000"
 export BACKEND_URL="http://127.0.0.1:5000"
 ```
 
-### 4. Run the backend
+### 5. Run the backend
 
-Start your Flask/FastAPI server (the one implementing the endpoints above) in a **separate terminal**:
+Start your Flask/FastAPI server in a **separate terminal**:
 
 ```bash
-python backend/app.py
+cd backend
+uvicorn main:app --reload --port 8000
 ```
 
-### 5. Run the Streamlit app
+### 6. Run the Streamlit app
 
 ```bash
+cd frontend
 streamlit run app.py
 ```
 
 The app opens automatically at **http://localhost:8501**.
 
-> ⚠️ If you see "Backend not reachable", it means step 4 wasn't started or is running on a different port than `BACKEND_URL` points to.
+> ⚠️ If you see "Backend not reachable", it means step 5 wasn't started or is running on a different port than `BACKEND_URL` points to.
 
 ---
 
@@ -145,6 +185,15 @@ To fully translate a language, its JSON file needs an entry for **every** key us
   - Step 3: a plate with rising steam and floating info badges
 - **Feature cards** — edit the `why_features` list to change the "Why Choose FoodRescue AI?" section.
 - **Footer** — fully driven by `get_text(...)` calls, easy to re-brand or relink.
+
+---
+
+## ⚠️ Known Limitations
+
+- **Gemini free-tier rate limits** — this project uses the **free tier** of the Google Gemini API, which has a **daily request quota**. Once that quota is used up for the day, ingredient detection and recipe generation will fail (you'll see an error from the backend) until the quota resets. For production or heavy usage, upgrade to a paid Gemini API plan.
+- **Pollinations.ai image generation** — dish images are generated via Pollinations.ai's free API. Since it's a free/shared service, image generation can occasionally be slow or briefly unavailable during high demand.
+- **Render free-tier cold starts** — if the backend is hosted on Render's free tier, it spins down after inactivity; the first request after idle time can take 30–50+ seconds to respond while the server wakes up.
+- **Translation coverage** — a language only looks fully translated if its JSON file has every key used in the app; missing keys silently fall back to English (see "Adding / Editing Translations" above).
 
 ---
 
