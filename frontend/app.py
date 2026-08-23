@@ -2648,7 +2648,7 @@ if "detected_ingredients" in st.session_state:
                                     "recipe_name",
                                     get_text("recipe_fallback_name", "Recipe")
                                 ),
-                                width=220
+                                width=320
                             )
 
                     except Exception:
