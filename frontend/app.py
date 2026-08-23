@@ -1524,7 +1524,9 @@ with hero_left:
     )
     hero_title_suffix = get_text(
         "hero_title_suffix", "with AI"
+
     )
+    hero_title_connector = get_text("hero_title_connector", "into a ")
     hero_sub_text = get_text(
         "hero_sub",
         "Snap a photo of whatever's left in your fridge — "
@@ -1539,7 +1541,7 @@ with hero_left:
     stat_recipe_label = get_text("stat_recipe_label", "Recipe Ideas")
 
     st.markdown(
-        f"""<div class="badge-pill">{badge_pill_text}</div><div class="hero-title">{hero_title_line1}<br>into a <span class="highlight">{hero_title_highlight}</span> {hero_title_suffix}</div><div class="hero-sub">{hero_sub_text}</div><div class="stat-row"><div><div class="stat-num green">{stat_free_num}</div><div class="stat-label">{stat_free_label}</div></div><div><div class="stat-num blue">{stat_time_num}</div><div class="stat-label">{stat_time_label}</div></div><div><div class="stat-num purple">{stat_recipe_num}</div><div class="stat-label">{stat_recipe_label}</div></div></div>""",
+        f"""<div class="badge-pill">{badge_pill_text}</div><div class="hero-title">{hero_title_line1}<br>{hero_title_connector}<span class="highlight">{hero_title_highlight}</span> {hero_title_suffix}</div><div class="hero-sub">{hero_sub_text}</div><div class="stat-row"><div><div class="stat-num green">{stat_free_num}</div><div class="stat-label">{stat_free_label}</div></div><div><div class="stat-num blue">{stat_time_num}</div><div class="stat-label">{stat_time_label}</div></div><div><div class="stat-num purple">{stat_recipe_num}</div><div class="stat-label">{stat_recipe_label}</div></div></div>""",
         unsafe_allow_html=True
     )
 
