@@ -2626,33 +2626,45 @@ if "detected_ingredients" in st.session_state:
                             ).format(err=str(e))
                         )
 
-            if st.session_state.get(
+
+             if st.session_state.get(
                 "recipe_image"
             ):
 
-                try:
+                    try:
 
-                    image_bytes = base64.b64decode(
-                        st.session_state.recipe_image
-                    )
-
-                    st.image(
-                        image_bytes,
-                        caption=recipe.get(
-                            "recipe_name",
-                            get_text("recipe_fallback_name", "Recipe")
-                        ),
-                        use_container_width=True
-                    )
-
-                except Exception:
-
-                    st.warning(
-                        get_text(
-                            "recipe_image_display_error",
-                            "Recipe image could not be displayed."
+                        image_bytes = base64.b64decode(
+                            st.session_state.recipe_image
                         )
-                    )
+
+                        img_col_left, img_col_center, img_col_right = st.columns(
+                            [1, 2, 1]
+                        )
+
+                        with img_col_center:
+
+                            st.image(
+                                image_bytes,
+                                caption=recipe.get(
+                                    "recipe_name",
+                                    get_text("recipe_fallback_name", "Recipe")
+                                ),
+                                width=220
+                            )
+
+                    except Exception:
+
+                        st.warning(
+                            get_text(
+                                "recipe_image_display_error",
+                                "Recipe image could not be displayed."
+                            )
+                        )
+
+            
+
+           
+                            
 
             st.write(
                 get_text("steps_header", "### 📝 Steps:")
