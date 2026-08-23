@@ -2,6 +2,8 @@
 
 **Turn your fridge into a feast with AI.**
 
+🔗 **[Live Demo](https://foodrescue-ai-yerau4q22hpq7ck349hew2.streamlit.app/)**
+
 FoodRescue AI looks at what you already have — from a photo, multiple photos, or even a voice note — and turns it into a real, cookable recipe. Built to cut everyday food waste by helping people cook with what's already in the fridge instead of buying more.
 
 ---
