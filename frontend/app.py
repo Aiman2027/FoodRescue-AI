@@ -2626,40 +2626,38 @@ if "detected_ingredients" in st.session_state:
                             ).format(err=str(e))
                         )
 
-                if st.session_state.get(
+            if st.session_state.get(
                 "recipe_image"
             ):
 
-                    try:
+                try:
 
-                        image_bytes = base64.b64decode(
-                            st.session_state.recipe_image
+                    img_col_left, img_col_center, img_col_right = st.columns(
+                        [1, 2, 1]
+                    )
+
+                    with img_col_center:
+
+                        st.markdown(
+                            f"""<div style="width:100%;max-width:480px;height:320px;margin:0 auto;border-radius:20px;overflow:hidden;border:1px solid rgba(34,211,238,0.25);box-shadow:0 12px 35px rgba(0,0,0,0.35);"><img src="data:image/png;base64,{st.session_state.recipe_image}" style="width:100%;height:100%;object-fit:cover;display:block;" /></div>""",
+                            unsafe_allow_html=True
                         )
 
-                        img_col_left, img_col_center, img_col_right = st.columns(
-                            [1, 2, 1]
-                        )
-
-                        with img_col_center:
-
-                            st.image(
-                                image_bytes,
-                                caption=recipe.get(
-                                    "recipe_name",
-                                    get_text("recipe_fallback_name", "Recipe")
-                                ),
-                                width=700
-                            )
-
-                    except Exception:
-
-                        st.warning(
-                            get_text(
-                                "recipe_image_display_error",
-                                "Recipe image could not be displayed."
+                        st.caption(
+                            recipe.get(
+                                "recipe_name",
+                                get_text("recipe_fallback_name", "Recipe")
                             )
                         )
 
+                except Exception:
+
+                    st.warning(
+                        get_text(
+                            "recipe_image_display_error",
+                            "Recipe image could not be displayed."
+                        )
+                    )
             st.write(
                 get_text("steps_header", "### 📝 Steps:")
             )
